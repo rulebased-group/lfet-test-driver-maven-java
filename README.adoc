@@ -1,0 +1,8 @@
+= LFET Testdriver Maven Java
+
+This repository provides a test driver for the language java with build tool maven.
+
+== Setup / Prerequisite
+
+* Install `lfet-maven-plugin.jar` as latest version in local maven repository
+* Install `license.jar` in local maven repository or provide license as hex value over `LFET_LIC` system property

@@ -1,0 +1,52 @@
+name: "CI"
+
+on: [push, workflow_dispatch]
+
+jobs:
+  test:
+    name: "Run tests with JDK ${{ matrix.jdk }}"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jdk: [8, 11, 15]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.jdk }}
+
+      - name: "download unreleased release of lfet-maven-plugin"
+        run: |
+          gh release download unreleased --repo uniqueck/lfet-api-maven-plugin --pattern 'lfet-maven-plugin.zip' --dir /tmp && \
+          unzip /tmp/lfet-maven-plugin.zip -d /tmp && \
+          rm /tmp/*.zip /tmp/*.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.LFET_MAVEN_PLUGIN }}
+
+      - name: "extract version from latest release"
+        id: vars
+        working-directory: /tmp
+        run: echo "::set-output name=version::$(find . -maxdepth 1 -name 'lfet-maven-plugin*.jar' | awk -F'-' '{ print $4"-"$5 }' | awk -F'.jar' '{ print $1 }')"
+
+      - name: "install lfet-maven-plugin.jar"
+        working-directory: /tmp
+        run: |
+          mvn \
+          --batch-mode \
+          --no-transfer-progress \
+          install:install-file \
+          -DartifactId=lfet-maven-plugin \
+          -DgroupId=de.lohrfink \
+          -Dversion=${{ steps.vars.outputs.version }} \
+          -Dpackaging=jar \
+          -Dfile=lfet-maven-plugin-${{ steps.vars.outputs.version }}.jar
+
+      - run: |
+          mvn \
+          --batch-mode \
+          --no-transfer-progress \
+          -Dlfet-maven-plugin.version=${{ steps.vars.outputs.version }} \
+          -DLFET_LIC=${{ secrets.LFET_MAVEN_PLUGIN_LIC }} \
+          test
+
+
