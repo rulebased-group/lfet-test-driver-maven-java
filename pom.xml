@@ -67,7 +67,8 @@
                     <dependency>
                         <groupId>de.lohrfink</groupId>
                         <artifactId>license</artifactId>
-                        <version>1.0.0-groovy</version>
+                        <version>1.0.0</version>
+                        <optional>true</optional>
                     </dependency>
                 </dependencies>
             </plugin>
