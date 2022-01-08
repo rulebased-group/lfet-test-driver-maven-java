@@ -15,9 +15,9 @@ jobs:
         with:
           java-version: ${{ matrix.jdk }}
 
-      - name: "download unreleased release of lfet-maven-plugin"
+      - name: "download latest release of lfet-maven-plugin"
         run: |
-          gh release download unreleased --repo uniqueck/lfet-api-maven-plugin --pattern 'lfet-maven-plugin.zip' --dir /tmp && \
+          gh release download --repo uniqueck/lfet-api-maven-plugin --pattern 'lfet-maven-plugin.zip' --dir /tmp && \
           unzip /tmp/lfet-maven-plugin.zip -d /tmp && \
           rm /tmp/*.zip /tmp/*.pdf
         env:
