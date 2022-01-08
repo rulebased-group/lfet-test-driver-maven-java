@@ -63,14 +63,6 @@
                         </configuration>
                     </execution>
                 </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>de.lohrfink</groupId>
-                        <artifactId>license</artifactId>
-                        <version>1.0.0</version>
-                        <optional>true</optional>
-                    </dependency>
-                </dependencies>
             </plugin>
 
             <plugin>
